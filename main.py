@@ -1,8 +1,9 @@
+import os
+import random
 import tkinter as tk
 from tkinter import messagebox
-import random
+
 from PIL import Image, ImageTk
-import os
 
 # Costanti del gioco
 VALORI_CARTE = {
@@ -29,48 +30,39 @@ SEMI = [
     "S",
 ]  # Clubs (Fiori), Diamonds (Quadri), Hearts (Cuori), Spades (Picche)
 
-# Dizionario per memorizzare le immagini
-carte_images = {}
-carta_retro = None
-
-
-def carica_immagini():
-    """Carica tutte le immagini delle carte"""
-    global carte_images, carta_retro
-
-    # Dimensioni desiderate per le carte
-    CARD_WIDTH = 100
-    CARD_HEIGHT = 145
-
-    # Carica il retro della carta
-    retro = Image.open("assets/carte/cardBack.png")
-    retro = retro.resize((CARD_WIDTH, CARD_HEIGHT), Image.Resampling.LANCZOS)
-    carta_retro = ImageTk.PhotoImage(retro)
-
-    # Carica tutte le carte
-    for rango in RANGHI:
-        for seme in SEMI:
-            nome_file = f"{rango}{seme}.png"
-            percorso = f"assets/carte/{nome_file}"
-            if os.path.exists(percorso):
-                img = Image.open(percorso)
-                img = img.resize((CARD_WIDTH, CARD_HEIGHT), Image.Resampling.LANCZOS)
-                carte_images[f"{rango}{seme}"] = ImageTk.PhotoImage(img)
-
-
-# Variabili globali per il gioco
-mazzo = []
-mano_giocatore = []
-mano_banco = []
-
 # Creiamo la finestra principale
 finestra = tk.Tk()
 finestra.title("Blackjack")
 finestra.geometry("1280x720")
 finestra.configure(bg="#2C3E50")
 
-# Carica le immagini delle carte
-carica_immagini()
+# Dizionario per memorizzare le immagini
+carte_images = {}
+carta_retro = None
+
+# Dimensioni desiderate per le carte
+CARD_WIDTH = 100
+CARD_HEIGHT = 145
+
+# Carica il retro della carta
+retro = Image.open(os.path.join("assets", "carte", "cardBack.png"))
+retro = retro.resize((CARD_WIDTH, CARD_HEIGHT), Image.Resampling.LANCZOS)
+carta_retro = ImageTk.PhotoImage(retro)
+
+# Carica tutte le carte
+for rango in RANGHI:
+    for seme in SEMI:
+        nome_file = f"{rango}{seme}.png"
+        percorso = os.path.join("assets", "carte", nome_file)
+        if os.path.exists(percorso):
+            img = Image.open(percorso)
+            img = img.resize((CARD_WIDTH, CARD_HEIGHT), Image.Resampling.LANCZOS)
+            carte_images[f"{rango}{seme}"] = ImageTk.PhotoImage(img)
+
+# Variabili globali per il gioco
+mazzo = []
+mano_giocatore = []
+mano_banco = []
 
 # Creiamo le etichette e i frame per le carte
 label_banco = tk.Label(
